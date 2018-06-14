@@ -69,6 +69,12 @@ Usage: textplay [options]
 		options[:wrap] = true
 	end
 
+  # if the '-e' option is set grab fountain header and export it to fdx
+  options[:fountain_header] = false
+  opts.on( '-e', '--fheader', "Look for fountain header and export it" ) do
+    options[:fountain_header] = true
+  end
+
 end
 
 # Parse the options and remove them from ARGV
@@ -86,6 +92,7 @@ TEXTPLAY
     -x, --xml         Output as the internal raw XML
     -d, --diff        Assume input is a diff, generate revision marks
     -w, --wrap        Wrap action and dialogue paragraphs
+    -e, --fheader     Look for fountain header and export it
 
 By default textplay converts to a fully-formed HTML document.
 
@@ -282,18 +289,19 @@ if options[:diff] == true
     text = text.gsub(/^\+\s*$/, '')
 end
 
-# If the first thing in the document (aside from comments) is a
-# key-value pair, then enable tagging of the meta block.
+meta = false
+if options[:fountain_header] == true
+  # If the first thing in the document (aside from comments) is a
+  # key-value pair, then enable tagging of the meta block.
 
-# returns the fist non-comment line
-l1_test = /^(?! *(#|=|\|\[\[|\/\*|\*\/)).+/.match(text)
-# convert match to string
-l1_test = l1_test[0]
-# if the first line looks like a meta-block, set the "meta" variable
-if l1_test =~ /: */
-  meta = true
-else
-  meta = false
+  # returns the fist non-comment line
+  l1_test = /^(?! *(#|=|\|\[\[|\/\*|\*\/)).+/.match(text)
+  # convert match to string
+  l1_test = l1_test[0]
+  # if the first line looks like a meta-block, set the "meta" variable
+  if l1_test =~ /: */
+    meta = true
+  end
 end
 
 # -------------------------
