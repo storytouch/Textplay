@@ -7,7 +7,7 @@ module TestHelpers
     Open3.capture2(CONVERT_COMMAND, stdin_data: fountain_data)[0]
   end
 
-  def fdx_tag_with_content(tag, content)
-    %r{.*Type=\"#{tag}\"><Text>#{content}</Text>.*}
+  def fdx_tag_with_content(tag, inner_content)
+    %r{.*Type=\"#{tag}\"><Text>#{inner_content}</Text>.*}
   end
 end

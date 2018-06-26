@@ -1,16 +1,18 @@
 require 'spec_helper'
+require 'shared_examples_for_tags_with_styles'
 
 describe 'dialogue' do
   subject { convert_from_fountain_to_fdx(fountain) }
-  let(:dialogue_text) { 'I am gonna say something' }
+  let(:inner_text) { 'Revenge is a dish best served' }
+  let(:element_text_on_fountain) { inner_text }
   let(:tag) { 'Dialogue' }
-  let(:fdx_result) { fdx_tag_with_content(tag, dialogue_text) }
+  let(:fdx_result) { fdx_tag_with_content(tag, element_text_on_fountain) }
 
   # we need to have a character or a parenthetical before of it
   let(:fountain) do
     <<-FOUNTAIN
-      \nPAUL
-      #{dialogue_text}
+      \nVITO CORLEONE
+      #{element_text_on_fountain}
     FOUNTAIN
   end
 
@@ -23,7 +25,7 @@ describe 'dialogue' do
       <<-FOUNTAIN
         \nCHARACTER
         (any text)
-        #{dialogue_text}
+        #{element_text_on_fountain}
       FOUNTAIN
     end
 

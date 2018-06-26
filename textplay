@@ -820,6 +820,8 @@ text = text.gsub(/([^-])--([^-])/, '\1&#8209;&#8209;\2')
 text = text.gsub(/^[ \t]+$/, '')
 text = text.gsub(/</, '&#60;')
 text = text.gsub(/>/, '&#62;')
+text = text.gsub(/\\\_/, '&#95;')
+text = text.gsub(/\\\*/, '&#42;')
 
 # -------- fountain escapes
 
@@ -830,7 +832,6 @@ text = text.gsub(/^\!(.+)/, '<action>\1</action>')
 text = text.gsub(/^[\ \t]*>[ ]*(.+?)[ ]*<[\ \t]*({{%}})?$/, '<center>\1\2</center>')
 text = text.gsub(/^[\ \t]*\&#62;[ \t]*(.*)$/,'<transition>\1</transition>')
 text = text.gsub(/^\.(?!\.)[\ \t]*(.*)$/, '<slug>\1</slug>')
-text = text.gsub(/\\\*/, '&#42;')
 
 # Strip-out Fountain Sections and Synopses
 text = text.gsub(/^[ \t]*#+[ \t]*(.*)/, "\n" + '<note>\1</note>' + "\n")
@@ -998,11 +999,10 @@ end
 text = text.gsub(/^([^\n\<].*)/, '<action>\1</action>')
 
 # Bold, Italic, Underline
-text = text.gsub(/([ \t\-_:;>])\*{3}([^\*\n]+)\*{3}(?=[ \t\)\]<\-_&;:?!.,])/, '\1<b><i>\2</i></b>')
-text = text.gsub(/([ \t\-_:;>])\*{2}([^\*\n]+)\*{2}(?=[ \t\)\]<\-_&;:?!.,])/, '\1<b>\2</b>')
-text = text.gsub(/([ \t\-_:;>])\*{1}([^\*\n]+)\*{1}(?=[ \t\)\]<\-_&;:?!.,])/, '\1<i>\2</i>')
-text = text.gsub(/([ \t\-\*:;>])\_{1}([^\_\n]+)\_{1}(?=[ \t\)\]<\-\*&;:?!.,])/, '\1<u>\2</u>')
-
+text = text.gsub(/(\()?\*{3}([^\*\n]+)\*{3}(\))?/, '<b><i>\1\2\3</i></b>')
+text = text.gsub(/(\()?\*{2}([^\*\n]+)\*{2}(\))?/, '<b>\1\2\3</b>')
+text = text.gsub(/(\()?\*{1}([^\*\n]+)\*{1}(\))?/, '<i>\1\2\3</i>')
+text = text.gsub(/(\()?\_{1}([^\_\n]+)\_{1}(\))?/, '<u>\1\2\3</u>')
 # ------- Japanese Characters
 text = text.gsub(/[\u4e00-\u9faf]+/x, '<span lang="jp">\0</span>')
 
@@ -1039,7 +1039,23 @@ if options[:diff] == true
 end
 
 
+def ensure_content_is_wrapped_on_text_tag(text)
+  return text if text.empty?
 
+  # text has an open & close tags
+  m = /<Text[^>]*>([^<]|<[^\/])*<\/Text>/.match(text)
+
+  if m.nil?
+    # text starts with "</text>" (one tag inside the other, like "<b><i>...")
+    m = /^<\/Text[^>]*>/.match(text)
+    return "#{m}#{ensure_content_is_wrapped_on_text_tag(m.post_match)}" unless m.nil?
+  end
+
+  # found one string without <text> around! Need to wrap it
+  return "<Text>#{text}</Text>" if m.nil?
+
+  return "#{ensure_content_is_wrapped_on_text_tag(m.pre_match)}#{m}#{ensure_content_is_wrapped_on_text_tag(m.post_match)}"
+end
 
 # NOTE: PHASE 5 - Convert XML to requested format
 # -----------------------------------------------------------------------------
@@ -1058,6 +1074,7 @@ if options[:fdx] == true
   text = text.gsub(/<\/u>/, '</Text>')
   text = text.gsub(/<i>/, '<Text Style="Italic">')
   text = text.gsub(/<\/i>/, '</Text>')
+  text = ensure_content_is_wrapped_on_text_tag(text)
   text = text.gsub(/<page-break \/>/, '<Paragraph Type="Action" StartsNewPage="Yes"><Text></Text></Paragraph>')
   text = text.gsub(/<transition>/, '<Paragraph Type="Transition"><Text>')
   text = text.gsub(/<\/transition>/, '</Text></Paragraph>')
@@ -1107,8 +1124,6 @@ else
   text = text.gsub(/<revised>/, '<span class="revised">')
   text = text.gsub(/<\/revised>/, '</span>')
 end
-
-
 
 
 # NOTE: PHASE 6 - Output

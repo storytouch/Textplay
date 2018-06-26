@@ -1,12 +1,17 @@
 require 'spec_helper'
+require 'shared_examples_for_tags_with_styles'
 
 describe 'heading' do
   subject { convert_from_fountain_to_fdx(fountain) }
   let(:tag) { 'Scene Heading' }
-  let(:fdx_result) { fdx_tag_with_content(tag, heading_text) }
+  let(:inner_text) { 'HEADING' }
+  let(:element_text_on_fountain) { "EXT #{inner_text}" }
+  let(:heading_on_fdx) { element_text_on_fountain }
+  let(:post_text) { 'DIA' }
+  let(:fdx_result) { fdx_tag_with_content(tag, heading_on_fdx) }
   let(:fountain) do
     <<-FOUNTAIN
-      \n#{fountain_content}\n
+      \n#{element_text_on_fountain}\n
     FOUNTAIN
   end
 
@@ -14,8 +19,7 @@ describe 'heading' do
     heading_prefix = ['INT', 'EXT', 'EST', 'INT./EXT', 'INT/EXT', 'I/E']
     heading_prefix.each do |prefix|
       context "and prefix is #{prefix}" do
-        let(:heading_text) { "#{prefix}. HEADING" }
-        let(:fountain_content) { "#{prefix}. HEADING" }
+        let(:element_text_on_fountain) { "#{prefix}. #{inner_text}" }
 
         it 'returns the fdx heading type' do
           expect(subject).to match fdx_result
@@ -25,8 +29,9 @@ describe 'heading' do
   end
 
   context 'when text starts with ". "' do
-    let(:heading_text) { 'heading' }
-    let(:fountain_content) { ". #{heading_text}" }
+    let(:inner_text) { 'heading' }
+    let(:heading_on_fdx) { inner_text }
+    let(:element_text_on_fountain) { ". #{inner_text}" }
 
     it 'returns the fdx heading type' do
       expect(subject).to match fdx_result
