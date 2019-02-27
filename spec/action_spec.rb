@@ -14,6 +14,12 @@ describe 'action' do
     expect(subject).to match fdx_result
   end
 
+  # this is the same behavior for other tags too
+  it "does not wrap file content on a <Text>" do
+    expect(subject).not_to match %r{<Content>\n*<Text>}
+    expect(subject).not_to match %r{</Text>\n*</Content>}
+  end
+
   context "when text starts with '! '" do
     let(:action_text) { 'INT. HEADING' }
     let(:inner_text) { "!#{action_text}" }

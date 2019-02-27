@@ -1091,6 +1091,14 @@ if options[:fdx] == true
   text = text.gsub(/<\/talk>/, '</Text></Paragraph>')
   text = text.gsub(/<action>/, '<Paragraph Type="Action"><Text>')
   text = text.gsub(/<\/action>/, '</Text></Paragraph>')
+
+  # BUGFIX Remove wrapping `<Text>` on the main content.
+  # At this point `text` might have a sequence of `<Paragraph>`'s wrapped with a
+  # `<Text>`. When Final Draft opens an FDX like this, it does not understand
+  # this structure and displays some "dummy" empty headings on top of the script.
+  # To avoid that, we remove the wrapping `<Text>`
+  text = text.gsub(/^<Text>\n*<Paragraph/, '<Paragraph')
+  text = text.gsub(/<\/Paragraph>\n*<\/Text>$/, '</Paragraph>')
 elsif options[:xml] == true
   text = text
 else
