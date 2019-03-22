@@ -785,6 +785,12 @@ xmlEnd = '</root>'
 # Remove any DOS-style line endings:
 text = text.gsub(/\r\n/, "\n")
 
+# Remove the backspace. Because of a bug on Mac this non-printable character is
+# not ignored. Final Draft can not handle it, which causes an error when user
+# tries to open a file with it. More details about this bug here
+# http://www.openradar.me/5288750
+text = text.gsub(/\u0008/, "")
+
 # Start by completely removing bonyard comments and notes. It is impossible to
 # prevent additional transformations inside them when newlines are present.
 # They must also be removed so they don't interfere with the transformation
