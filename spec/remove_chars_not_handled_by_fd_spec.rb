@@ -5,7 +5,7 @@ describe 'remove ASCII chars not handled by Final Draft' do
 
   let(:tag) { 'Action' }
   let(:inner_text) { "\x08back\x08space\x08" }
-  let(:element_text_on_fountain) { inner_text }
+  let(:element_text_on_fountain) { "!#{inner_text}" }
   let(:action_text) { 'backspace' }
   let(:fountain) { element_text_on_fountain }
   let(:fdx_result) { fdx_tag_with_content(tag, action_text) }
