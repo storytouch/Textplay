@@ -1001,8 +1001,13 @@ end
 
 # ------- Misc
 
-# Any untagged paragraph gets tagged as 'action'
-text = text.gsub(/^([^\n\<].*)/, '<action>\1</action>')
+if options[:fdx] == true
+  # Any untagged paragraph gets tagged as 'general'
+  text = text.gsub(/^([^\n\<].*)/, '<general>\1</general>')
+else
+  # Any untagged paragraph gets tagged as 'action'
+  text = text.gsub(/^([^\n\<].*)/, '<action>\1</action>')
+end
 
 # Bold, Italic, Underline
 text = text.gsub(/(\()?\*{3}([^\*\n]+)\*{3}(\))?/, '<b><i>\1\2\3</i></b>')
@@ -1036,7 +1041,7 @@ if options[:diff] == true
     # search for {{%}} inside XML tags and replace with markup
     text = text.gsub(/
         # first, find the XML tags
-        (<(transition|sceneheading|slug|center|dialogue|character|paren|talk|action)>)
+        (<(transition|sceneheading|slug|center|dialogue|character|paren|talk|action|general)>)
         # Then the content + revision marker
         (.+) {{%}}
         # with a matching end-tag
@@ -1097,6 +1102,8 @@ if options[:fdx] == true
   text = text.gsub(/<\/talk>/, '</Text></Paragraph>')
   text = text.gsub(/<action>/, '<Paragraph Type="Action"><Text>')
   text = text.gsub(/<\/action>/, '</Text></Paragraph>')
+  text = text.gsub(/<general>/, '<Paragraph Type="General"><Text>')
+  text = text.gsub(/<\/general>/, '</Text></Paragraph>')
 
   # BUGFIX Remove wrapping `<Text>` on the main content.
   # At this point `text` might have a sequence of `<Paragraph>`'s wrapped with a
