@@ -1068,6 +1068,32 @@ def ensure_content_is_wrapped_on_text_tag(text)
   return "#{ensure_content_is_wrapped_on_text_tag(m.pre_match)}#{m}#{ensure_content_is_wrapped_on_text_tag(m.post_match)}"
 end
 
+def merge_multiple_styles(text)
+  return text if text.empty?
+  output = text
+
+  regex_multiple_styles = /(?:<Text\sStyle="(?:Bold|Italic|Underline)">){2,}(?:.*?)(?:<\/Text>){2,}/
+  regex_inner_content   = /(?:<Text\sStyle="(?:Bold|Italic|Underline)">){2,}(.*?)(?:<\/Text>){2,}/
+
+  text_with_multiple_styles = text.scan(regex_multiple_styles)
+  return output if text_with_multiple_styles.empty?
+
+  text_with_multiple_styles.each do |match|
+    # get styles
+    styles = match.scan(/<Text\sStyle="(Bold|Italic|Underline)+">/).join("+")
+
+    # get inner content
+    inner_content = match.scan(regex_inner_content).join
+
+    # merge styles
+    merged_styles = "<Text Style=\"#{styles}\">#{inner_content}</Text>"
+    output.gsub!(match, merged_styles)
+  end
+
+  output
+end
+
+
 # NOTE: PHASE 5 - Convert XML to requested format
 # -----------------------------------------------------------------------------
 
@@ -1085,6 +1111,7 @@ if options[:fdx] == true
   text = text.gsub(/<\/u>/, '</Text>')
   text = text.gsub(/<i>/, '<Text Style="Italic">')
   text = text.gsub(/<\/i>/, '</Text>')
+  text = merge_multiple_styles(text)
   text = ensure_content_is_wrapped_on_text_tag(text)
   text = text.gsub(/<page-break \/>/, '<Paragraph Type="Action" StartsNewPage="Yes"><Text></Text></Paragraph>')
   text = text.gsub(/<transition>/, '<Paragraph Type="Transition"><Text>')
