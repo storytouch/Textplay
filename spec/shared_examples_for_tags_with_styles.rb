@@ -183,16 +183,11 @@ shared_examples_for "tags with styles" do |tag, element_on_fdx|
     end
   end
 
-  # TODO: we have to ensure we handle "**b****xb***i*" as "**b**" "**xb**" "*i*"
-  # maybe we can use a fountain with "<b><i><u>" when we need to export to FDX
   context 'when a word has a mix of formatting' do
-    let(:element_text_on_fountain) { '**b****xb***i*' }
-    let(:bold) { %r{.*<Text Style="Bold">\(?b</Text>.*} }
-    let(:inner_bold) { %r{.*<Text Style="Bold">xb</Text>.*} }
-    let(:italic) { %r{.*<Text Style="Italic">i\)?</Text>.*} }
-    let(:result) { %r{#{bold}#{inner_bold}#{italic}} }
+    let(:element_text_on_fountain) { '***_iub_***' }
+    let(:result) { %r{.*<Text Style="Bold\+Italic\+Underline">\(?iub\)?</Text>.*} }
 
-    xit 'returns the the tag with the right formatting' do
+    it 'returns the the tag with the right formatting' do
       expect(subject).to match result
     end
   end
