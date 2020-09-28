@@ -796,8 +796,8 @@ text = text.gsub(/\u0008/, "")
 # They must also be removed so they don't interfere with the transformation
 # of adjacent elements.
 
-# Boneyard
-text = text.gsub(/\/\*(.|\n)+?\*\//, '')
+# Boneyard, excluding /*SHOT*/ marks
+text = text.gsub(/(?!\/\*SHOT\*\/)\/\*(.|\n)+?\*\//, '')
 
 # Fountain [[notes]]
 text = text.gsub(/\[{2}[^\]]+\]{2}/,'')
@@ -830,6 +830,9 @@ text = text.gsub(/\\\_/, '&#95;')
 text = text.gsub(/\\\*/, '&#42;')
 
 # -------- fountain escapes
+
+# Shot escape
+text = text.gsub(/^\!\/\*SHOT\*\/(.+)/, '<shot>\1</shot>')
 
 # Action escape
 text = text.gsub(/^\!(.+)/, '<action>\1</action>')
@@ -1129,6 +1132,8 @@ if options[:fdx] == true
   text = text.gsub(/<\/talk>/, '</Text></Paragraph>')
   text = text.gsub(/<action>/, '<Paragraph Type="Action"><Text>')
   text = text.gsub(/<\/action>/, '</Text></Paragraph>')
+  text = text.gsub(/<shot>/, '<Paragraph Type="Shot"><Text>')
+  text = text.gsub(/<\/shot>/, '</Text></Paragraph>')
   text = text.gsub(/<general>/, '<Paragraph Type="General"><Text>')
   text = text.gsub(/<\/general>/, '</Text></Paragraph>')
 
@@ -1169,6 +1174,8 @@ else
   text = text.gsub(/<\/lyric>/, '</span>')
   text = text.gsub(/<action>/, '<p class="action">')
   text = text.gsub(/<\/action>/, '</p>')
+  text = text.gsub(/<shot>/, '<p class="shot">')
+  text = text.gsub(/<\/shot>/, '</p>')
   text = text.gsub(/<revised>/, '<span class="revised">')
   text = text.gsub(/<\/revised>/, '</span>')
 end
