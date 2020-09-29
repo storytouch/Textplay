@@ -890,7 +890,7 @@ text = text.gsub(/\\\*/, '&#42;')
 # -------- fountain escapes
 
 # Shot escape
-text = text.gsub(/^\!\/\*SHOT\*\/(.+)/, '<shot>\1</shot>')
+text = text.gsub(/^\/\*SHOT\*\/\!(.+)/, '<shot>\1</shot>')
 
 # Action escape
 text = text.gsub(/^\!(.+)/, '<action>\1</action>')

@@ -5,7 +5,7 @@ describe 'shot' do
   subject { convert_from_fountain_to_fdx(fountain) }
   let(:tag) { 'Shot' }
   let(:inner_text) { 'SHOT' }
-  let(:element_text_on_fountain) { "!/*SHOT*/#{inner_text}" }
+  let(:element_text_on_fountain) { "/*SHOT*/!#{inner_text}" }
   let(:shot_text) { inner_text }
   let(:fountain) { element_text_on_fountain }
   let(:fdx_result) { fdx_tag_with_content(tag, shot_text) }
