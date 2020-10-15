@@ -33,4 +33,17 @@ describe 'dialogue' do
       expect(subject).to match fdx_result
     end
   end
+
+  context 'when there is no new line after the dialogue (EOF)' do
+    let(:fountain) do
+      <<-FOUNTAIN.chomp # chomp avoids the last \n on HEREDOC syntax
+        \nVITO CORLEONE
+        #{element_text_on_fountain}
+      FOUNTAIN
+    end
+
+    it 'returns the fdx dialogue type' do
+      expect(subject).to match fdx_result
+    end
+  end
 end
