@@ -1,4 +1,4 @@
-#!/usr/bin/ruby
+#!/usr/bin/env ruby
 
 # TEXTPLAY -- A plain-text conversion tool for screenwriters
 
