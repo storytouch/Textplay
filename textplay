@@ -974,10 +974,13 @@ text = text.gsub(/
 # Optional revision marker
 ({{%}})?\n
 # Dialogue
-(^[\ \t]* .+ \n)+
+(^[\ \t]* .+ \n?)+
 # Require trailing empty line or end of document
 (^[\ \t]*$|\Z)
 /x, "\n"+'<dialogue>'+'\0'+'</dialogue>'+"\n")
+
+# Forces the dialog closing marker to be alone on a new line.
+text = text.gsub(/(.)<\/dialogue>$/, '\1' + "\n" + '</dialogue>')
 
 # Now that they're wrapped, tag the individual elements
 
