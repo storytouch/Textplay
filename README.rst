@@ -60,7 +60,7 @@ See ``--help`` for info.
 Key                                      Default Value
 =======================================  ==================
 title                                    "A Screenplay"
-goldman_sluglines                        on
+goldman_sluglines                        off
 screenbundle_comments                    off
 font                                     "Courier Prime"
 slugline_spacing (number of 12pt lines)  1

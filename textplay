@@ -159,7 +159,7 @@ be customized:
 
       You can define what name textplay uses when generating files.
 
-    * goldman_sluglines (on/off) -- default: on
+    * goldman_sluglines (on/off) -- default: off
 
       By default textplay interprets any line that's all-caps as a
       slugline.
@@ -216,7 +216,7 @@ document like this:
 
 title: Ron's Woodland Adventure
 font: Courier New
-goldman_sluglines: off
+goldman_sluglines: on
 bold_sluglines: on
 
 The block of key/value pairs:
@@ -429,7 +429,7 @@ if title == nil or title == ""
 end
 
 if goldman_sluglines == nil or goldman_sluglines == ""
-goldman_sluglines = "on"
+goldman_sluglines = "off"
 end
 
 if screenbundle_comments == nil or screenbundle_comments == ""
