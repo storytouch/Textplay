@@ -893,7 +893,7 @@ text = text.gsub(/^\!(.+)/, '<action>\1</action>')
 
 # Fountain Rules
 text = text.gsub(/^[\ \t]*>[ ]*(.+?)[ ]*<[\ \t]*({{%}})?$/, '<center>\1\2</center>')
-text = text.gsub(/^[\ \t]*\&#62;[ \t]*(.*)$/,'<transition>\1</transition>')
+text = text.gsub(/^[\ \t]*>[ \t]*(.*)$/,'<transition>\1</transition>')
 text = text.gsub(/^\.(?!\.)[\ \t]*(.*)$/, '<slug>\1</slug>')
 
 # Strip-out Fountain Sections and Synopses
