@@ -161,8 +161,7 @@ be customized:
 
     * goldman_sluglines (on/off) -- default: off
 
-      By default textplay interprets any line that's all-caps as a
-      slugline.
+      Interprets a line that's all-caps as a slugline.
 
     * screenbundle_comments (on/off) -- default: off
 
@@ -880,10 +879,7 @@ end
 # Misc Encoding
 text = text.gsub(/^[ \t]*([=-]{3,})[ \t]*({{%}})?$/, '<page-break />')
 text = text.gsub(/&/, '&#38;')
-#text = text.gsub(/([^-])--([^-])/, '\1&#8209;&#8209;\2') # We think it's not necessary once <> is already escaped.
 text = text.gsub(/^[ \t]+$/, '')
-text = text.gsub(/</, '&#60;')
-text = text.gsub(/>/, '&#62;')
 text = text.gsub(/\\\_/, '&#95;')
 text = text.gsub(/\\\*/, '&#42;')
 
@@ -897,7 +893,7 @@ text = text.gsub(/^\!(.+)/, '<action>\1</action>')
 
 # Fountain Rules
 text = text.gsub(/^[\ \t]*>[ ]*(.+?)[ ]*<[\ \t]*({{%}})?$/, '<center>\1\2</center>')
-text = text.gsub(/^[\ \t]*\&#62;[ \t]*(.*)$/,'<transition>\1</transition>')
+text = text.gsub(/^[\ \t]*>[ \t]*(.*)$/,'<transition>\1</transition>')
 text = text.gsub(/^\.(?!\.)[\ \t]*(.*)$/, '<slug>\1</slug>')
 
 # Strip-out Fountain Sections and Synopses
