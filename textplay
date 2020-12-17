@@ -878,7 +878,6 @@ end
 
 # Misc Encoding
 text = text.gsub(/^[ \t]*([=-]{3,})[ \t]*({{%}})?$/, '<page-break />')
-text = text.gsub(/&/, '&#38;')
 text = text.gsub(/^[ \t]+$/, '')
 text = text.gsub(/\\\_/, '&#95;')
 text = text.gsub(/\\\*/, '&#42;')
