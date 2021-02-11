@@ -69,12 +69,17 @@ Usage: textplay [options]
 		options[:wrap] = true
 	end
 
-  # if the '-e' option is set grab fountain header and export it to fdx
-  options[:fountain_header] = false
-  opts.on( '-e', '--fheader', "Look for fountain header and export it" ) do
-    options[:fountain_header] = true
-  end
+	# if the '-e' option is set grab fountain header and export it to fdx
+	options[:fountain_header] = false
+	opts.on( '-e', '--fheader', "Look for fountain header and export it" ) do
+		options[:fountain_header] = true
+	end
 
+	# The default fallback element is 'general'. This option can change it (eg: --fallback=action)
+	options[:fallback_element] = 'general'
+	opts.on( '-F', '--fallback ELEMENT', String, "Any untagged paragraph gets tagged as 'element' (default 'general')" ) do |fallback_element|
+		options[:fallback_element] = fallback_element
+	end
 end
 
 # Parse the options and remove them from ARGV
@@ -86,13 +91,14 @@ TEXTPLAY
 
     textplay [options]
 
-    -h, --help        Display the help text
-    -s, --snippet     Do not include document headers/footers
-    -f, --fdx         Convert to Final Draft .fdx
-    -x, --xml         Output as the internal raw XML
-    -d, --diff        Assume input is a diff, generate revision marks
-    -w, --wrap        Wrap action and dialogue paragraphs
-    -e, --fheader     Look for fountain header and export it
+    -h, --help             Display the help text
+    -s, --snippet          Do not include document headers/footers
+    -f, --fdx              Convert to Final Draft .fdx
+    -x, --xml              Output as the internal raw XML
+    -d, --diff             Assume input is a diff, generate revision marks
+    -w, --wrap             Wrap action and dialogue paragraphs
+    -e, --fheader          Look for fountain header and export it
+    -F, --fallback element Any untagged paragraph gets tagged as 'element'. Default is 'general'
 
 By default textplay converts to a fully-formed HTML document.
 
@@ -1060,13 +1066,8 @@ end
 
 # ------- Misc
 
-if options[:fdx] == true
-  # Any untagged paragraph gets tagged as 'general'
-  text = text.gsub(/^([^\n\<].*)/, '<general>\1</general>')
-else
-  # Any untagged paragraph gets tagged as 'action'
-  text = text.gsub(/^([^\n\<].*)/, '<action>\1</action>')
-end
+# Any untagged paragraph gets tagged as fallback_element
+text = text.gsub(/^([^\n\<].*)/, '<'+options[:fallback_element]+'>\1</'+options[:fallback_element]+'>')
 
 # Bold, Italic, Underline
 text = text.gsub(/(\()?\*{3}([^\*\n]+)\*{3}(\))?/, '<b><i>\1\2\3</i></b>')
